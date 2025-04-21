@@ -1,12 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Peer, { MediaConnection } from "peerjs";
 import CallButton from "@/components/CallButton";
 
-export default function CallPage() {
+// Loading component to show while the Call content is loading
+function CallLoading() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-900">
+      <div className="text-center">
+        <div className="mb-4 text-xl font-bold text-white">
+          Loading call interface...
+        </div>
+        <div className="animate-pulse text-gray-400">Please wait</div>
+      </div>
+    </div>
+  );
+}
+
+// The actual call component
+function CallContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
@@ -163,8 +178,6 @@ export default function CallPage() {
       return null;
     }
   };
-
-  // (Removed duplicate useEffect to ensure hooks are called in the same order)
 
   const startCall = async () => {
     if (
@@ -366,5 +379,14 @@ export default function CallPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+// Default export with Suspense
+export default function CallPage() {
+  return (
+    <Suspense fallback={<CallLoading />}>
+      <CallContent />
+    </Suspense>
   );
 }
