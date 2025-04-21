@@ -1,23 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-
-// For simplicity, we're using an in-memory users array
-// In a real application, you would use a database
-export const users = [
-  {
-    id: "1",
-    name: "User1",
-    email: "user1@example.com",
-    password: bcrypt.hashSync("password", 10),
-  },
-  {
-    id: "2",
-    name: "User2",
-    email: "user2@example.com",
-    password: bcrypt.hashSync("password", 10),
-  },
-];
+import { users } from "@/app/lib/auth";
 
 const handler = NextAuth({
   providers: [
